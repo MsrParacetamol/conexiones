@@ -4,12 +4,12 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Configuración de la base de datos
-$host = 'turntable.proxy.rlwy.net';
-$port = '30819';
-$dbname = 'railway';
-$username = 'root';
-$password = 'FbrdpRqfuivFdzHfQcqatLVSPVSOrjjQ';
+// Configuración de la base de datos usando variables de entorno de Railway
+$host = getenv('MYSQLHOST') ?: 'localhost';
+$port = getenv('MYSQLPORT') ?: '3306';
+$dbname = getenv('MYSQLDATABASE') ?: 'railway';
+$username = getenv('MYSQLUSER') ?: 'root';
+$password = getenv('MYSQLPASSWORD') ?: '';
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
