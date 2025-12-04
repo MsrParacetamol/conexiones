@@ -11,6 +11,19 @@ $dbname = 'railway';
 $username = 'root';
 $password = 'FbrdpRqfuivFdzHfQCqatLVSPVSOrjj0';
 
+if (!$host || !$port || !$dbname || !$username || !$password) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Faltan variables: ' . json_encode([
+            'host' => $host,
+            'port' => $port,
+            'dbname' => $dbname,
+            'username' => $username,
+            'password' => $password
+        ])
+    ]);
+    exit;
+
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
