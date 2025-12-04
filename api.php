@@ -9,7 +9,7 @@ $host = 'mysql.railway.internal';
 $port = '3306';
 $dbname = 'railway';
 $username = 'root';
-$password = 'FbrdpRqfuivFdzHfQCqatLVSPVSOrjj0';
+$password = 'FbrdpRqfuivFdzHfQCqatLVSPVSOrjjQ';
 
 if (!$host || !$port || !$dbname || !$username || !$password) {
     echo json_encode([
