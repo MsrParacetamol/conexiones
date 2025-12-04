@@ -1,30 +1,36 @@
 <?php
+// Headers generales
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *'); // Permite acceso desde cualquier dominio
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Manejar preflight requests (CORS)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit(0);
+}
+
 // Configuración de la base de datos usando variables de entorno de Railway
-$host = getenv('MYSQLHOST');
-$port = getenv('MYSQLPORT');
-$dbname = getenv('MYSQLDATABASE');
-$username = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
+$host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
+$port = getenv('MYSQLPORT') ?: '3306';
+$dbname = getenv('MYSQLDATABASE') ?: 'railway';
+$username = getenv('MYSQLUSER') ?: 'root';
+$password = getenv('MYSQLPASSWORD') ?: '';
 
 try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
+        $username,
+        $password,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 } catch(PDOException $e) {
     error_log("Error de conexión: " . $e->getMessage());
     echo json_encode(['success' => false, 'message' => 'Error de conexión a la base de datos']);
     exit;
 }
 
-// Manejar preflight requests
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
+// Acción solicitada
 $action = $_GET['action'] ?? '';
 error_log("API Action: " . $action);
 
@@ -48,6 +54,8 @@ switch($action) {
         echo json_encode(['success' => false, 'message' => 'Acción no válida: ' . $action]);
         break;
 }
+
+// ================= FUNCIONES =================
 
 function getProducts($pdo) {
     try {
@@ -107,7 +115,9 @@ function updateProduct($pdo) {
         $data = json_decode(file_get_contents("php://input"), true);
         if (!$data || !isset($data['id_producto'])) throw new Exception('Datos inválidos o ID faltante');
 
-        $sql = "UPDATE productos SET nombre=?, descripcion=?, categoria_id=?, marca=?, modelo=?, tipo=?, especificaciones=?, imagen_url=? WHERE id_producto=?";
+        $sql = "UPDATE productos 
+                SET nombre=?, descripcion=?, categoria_id=?, marca=?, modelo=?, tipo=?, especificaciones=?, imagen_url=? 
+                WHERE id_producto=?";
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             $data['nombre'] ?? '',
