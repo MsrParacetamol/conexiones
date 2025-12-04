@@ -5,19 +5,26 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Configuración de la base de datos usando variables de entorno de Railway
-$host = getenv('MYSQLHOST');
-$port = getenv('MYSQLPORT');
-$dbname = getenv('MYSQLDATABASE');
-$username = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
+error_log("MYSQLHOST: " . getenv('MYSQLHOST'));
+error_log("MYSQLPORT: " . getenv('MYSQLPORT'));
+error_log("MYSQLDATABASE: " . getenv('MYSQLDATABASE'));
+error_log("MYSQLUSER: " . getenv('MYSQLUSER'));
+error_log("MYSQLPASSWORD: " . getenv('MYSQLPASSWORD'));
 
 // Validar que todas las variables estén definidas
 if (!$host || !$port || !$dbname || !$username || !$password) {
-    error_log("Faltan variables de entorno para la conexión MySQL");
-    echo json_encode(['success' => false, 'message' => 'Configuración incompleta de base de datos']);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Faltan variables: ' . json_encode([
+            'host' => $host,
+            'port' => $port,
+            'dbname' => $dbname,
+            'username' => $username,
+            'password' => $password
+        ])
+    ]);
     exit;
 }
-
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
