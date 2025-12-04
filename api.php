@@ -5,13 +5,12 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Configuración de la base de datos usando variables de entorno de Railway
-error_log("MYSQLHOST: " . getenv('MYSQLHOST'));
-error_log("MYSQLPORT: " . getenv('MYSQLPORT'));
-error_log("MYSQLDATABASE: " . getenv('MYSQLDATABASE'));
-error_log("MYSQLUSER: " . getenv('MYSQLUSER'));
-error_log("MYSQLPASSWORD: " . getenv('MYSQLPASSWORD'));
+$host = $_ENV['MYSQLHOST'] ?? $_SERVER['MYSQLHOST'] ?? null;
+$port = $_ENV['MYSQLPORT'] ?? $_SERVER['MYSQLPORT'] ?? null;
+$dbname = $_ENV['MYSQLDATABASE'] ?? $_SERVER['MYSQLDATABASE'] ?? null;
+$username = $_ENV['MYSQLUSER'] ?? $_SERVER['MYSQLUSER'] ?? null;
+$password = $_ENV['MYSQLPASSWORD'] ?? $_SERVER['MYSQLPASSWORD'] ?? null;
 
-// Validar que todas las variables estén definidas
 if (!$host || !$port || !$dbname || !$username || !$password) {
     echo json_encode([
         'success' => false,
