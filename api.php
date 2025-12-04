@@ -5,7 +5,7 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Configuración de la base de datos usando variables de entorno de Railway
-$host = getenv('MYSQLHOST') ?: 'mysql.railway.internal';
+$host = getenv('MYSQLHOST') ?: 'localhost';
 $port = getenv('MYSQLPORT') ?: '3306';
 $dbname = getenv('MYSQLDATABASE') ?: 'railway';
 $username = getenv('MYSQLUSER') ?: 'root';
