@@ -1,8 +1,16 @@
 <?php
-// Si el archivo existe, servirlo directamente
-if (file_exists(__DIR__ . $_SERVER['REQUEST_URI'])) {
+$request = $_SERVER['REQUEST_URI'];
+
+// Si el archivo existe y no es api.php, servirlo directamente
+if ($request !== '/api.php' && file_exists(__DIR__ . $request)) {
     return false;
 }
 
-// Si no, redirigir a index.php
+// Si es api.php, incluirlo directamente
+if ($request === '/api.php') {
+    require_once __DIR__ . '/api.php';
+    exit;
+}
+
+// Si no existe, redirigir a index.php
 require_once __DIR__ . '/index.php';
