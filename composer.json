@@ -1,1 +1,5 @@
-
+{
+  "name": "huntech/api",
+  "description": "API PHP para catálogo y POS",
+  "require": {}
+}
