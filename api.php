@@ -5,24 +5,11 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Configuración de la base de datos usando variables de entorno de Railway
-$host = 'mysql.railway.internal';
-$port = '3306';
-$dbname = 'railway';
-$username = 'root';
-$password = 'FbrdpRqfuivFdzHfQCqatLVSPVSOrjjQ';
-
-if (!$host || !$port || !$dbname || !$username || !$password) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Faltan variables: ' . json_encode([
-            'host' => $host,
-            'port' => $port,
-            'dbname' => $dbname,
-            'username' => $username,
-            'password' => $password
-        ])
-    ]);
-    exit;
+$host = getenv('MYSQLHOST');
+$port = getenv('MYSQLPORT');
+$dbname = getenv('MYSQLDATABASE');
+$username = getenv('MYSQLUSER');
+$password = getenv('MYSQLPASSWORD');
 
 try {
     $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4", $username, $password);
